@@ -1,0 +1,14 @@
+<uwsgi>
+    <socket>{{ PROJECT_HOST }}:{{ PROJECT_PORT }}</socket>
+    <pythonpath>{{ PROJECT_SETTINGS_PATH }}</pythonpath>
+    <module>{{ PROJECT_UWSGI_MODULE }}</module>
+    <processes>{{ PROJECT_UWSGI_PROCESSES_COUNT }}</processes>
+    <!--<daemonize>{{ PROJECT_LOG_PATH }}/uwsgi.log</daemonize>-->
+    <listen>{{ NGINX_LISTEN_PORT }}</listen>
+    <master>true</master>
+    <profiler>true</profiler>
+    <memory-report>true</memory-report>
+    <enable-threads>true</enable-threads>
+    <logdate>true</logdate>
+    <limit-as>6048</limit-as>
+</uwsgi>
