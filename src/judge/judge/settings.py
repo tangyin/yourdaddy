@@ -14,12 +14,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_DIR = os.path.join(BASE_DIR, 'judge')
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-SCRIPTS_DIR = os.path.join(BASE_DIR, 'scripts')
-ETC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'etc'))
-VAR_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'var'))
-LOG_DIR = os.path.join(VAR_ROOT, 'log')
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,10 +23,9 @@ LOG_DIR = os.path.join(VAR_ROOT, 'log')
 SECRET_KEY = 'b(#3^f2zujx_*!ua&9s7#5v!jf#_aa5lrhf1g002m%g6j9(ssn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-T_DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -44,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'config',
+    'judgesys.apps.JudgesysConfig',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,6 +52,22 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'judge.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 WSGI_APPLICATION = 'judge.wsgi.application'
 
@@ -79,7 +88,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -92,46 +101,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_DIR = os.path.join(BASE_DIR, "static")
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
-
-
-#------------uwsgi & nginx settings---------------
-UWSGI_PROJECT_HOST = '127.0.0.1'
-UWSGI_PROJECT_PORT = '11890'
-UWSGI_PROJECT_SETTINGS_PATH = PROJECT_DIR
-UWSGI_PROJECT_UWSGI_MODULE = 'django_uwsgi'
-UWSGI_PROJECT_UWSGI_PROCESSES_COUNT = '4'
-UWSGI_PROJECT_LOG_PATH = LOG_DIR
-
-NGINX_SERVER_NAME='yourdaddy'
-NGINX_LISTEN_PORT = '80'
-NGINX_STATIC_EXPIRES = '2h'
-
-#------------supervisor settings------------------
-
-
-try:
-    from local_settings import *
-except:
-    pass
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'debug': T_DEBUG,
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-
-    },
-]
