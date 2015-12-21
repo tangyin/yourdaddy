@@ -7,9 +7,6 @@ from django.db import models
 # Create your models here.
 
 
-
-
-
 class CarJudge(models.Model):
     series = models.ForeignKey(CarSeries)
     purchase_date = models.DateField(verbose_name="购买日期")
