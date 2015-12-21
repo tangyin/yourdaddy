@@ -1,5 +1,5 @@
 # project
-judge/judge/local_settings.py
+src/judge/judge/local_settings.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
