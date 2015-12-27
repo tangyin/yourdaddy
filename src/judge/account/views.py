@@ -8,7 +8,7 @@ from django.shortcuts import render
 
 
 def my_user_register(request):
-    return render (request, template_name= "account/register.html")
+    return render(request, template_name= "account/register.html")
 
 
 def user_register(request):
