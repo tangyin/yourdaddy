@@ -27,7 +27,3 @@ def my_login(request):
 def my_logout(request):
     template_response = views.logout(request,template_name= "account/logout")
     return template_response
-
-
-def my_password_reset(request):
-    pass
