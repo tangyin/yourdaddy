@@ -3,12 +3,14 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.contrib.auth.models import User
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import views
-from forms import RegistrationForm,LoginForm
 from django.shortcuts import render
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+
+from forms import RegistrationForm,LoginForm
 
 
 def my_user_register(request):
@@ -23,7 +25,7 @@ def my_user_register(request):
             user.save()
             #注册成功
             name = request.POST["name"]
-            return HttpResponseRedirect(name)
+            return HttpResponseRedirect("/index")
     else:
         form = RegistrationForm()
     return render(request,'account/register.html', {'form': form, })
@@ -39,12 +41,16 @@ def my_login(request):
             login(request,user)
             #注册成功
             name = request.POST["name"]
-            return HttpResponseRedirect(name)
+            response = HttpResponseRedirect(name)
+            return response
+    elif request.user.is_authenticated():
+        return HttpResponseRedirect("/judgesys/index")
     else:
         form = LoginForm()
     return render(request,'account/login.html',{'form': form }, context_instance=RequestContext(request))
 
-
+@login_required
 def my_logout(request):
-    template_response = views.logout(request,template_name= "account/logout")
-    return template_response
+    logout(request)
+    response = HttpResponseRedirect("/judgesys/index")
+    return response
