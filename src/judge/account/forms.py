@@ -24,12 +24,7 @@ class RegistrationForm(forms.Form):
         # 正则表达式验证
         if not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$',username):
             raise forms.ValidationError('用户名中只能包含字母、数字、下划线和汉字。')
-        try:
-            # 判断用户名是否被注册
-            User.objects.get(username=username)
-        except ObjectDoesNotExist:
-            return username
-        raise forms.ValidationError('该用户名已存在，请重新填写！')
+
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -56,22 +51,3 @@ class LoginForm(forms.Form):
     username = forms.CharField(label='用户名')
     password = forms.CharField(label='密码',widget=forms.PasswordInput())
     remember = forms.BooleanField(label='下次自动登录', required=False)
-
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        try:
-            User.objects.get(username = self.cleaned_data['username'])
-        except ObjectDoesNotExist:
-            raise forms.ValidationError('该用户名不存在或密码错误，请重新填写！')
-        return username
-
-    def clean_password(self):
-        if 'username' in self.cleaned_data:
-            username = self.cleaned_data['username']
-            password=self.cleaned_data['password']
-
-            u = User.objects.get(username = username)
-            user = authenticate (username=u.username,password=password)
-            if user is not None and user.is_active:
-                return password
-            raise forms.ValidationError('该用户不存在或密码错误，请重新填写！')

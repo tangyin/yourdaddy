@@ -9,6 +9,9 @@ from django.contrib.auth import views
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.contrib import messages
+
 
 from forms import RegistrationForm,LoginForm
 
@@ -17,6 +20,7 @@ def my_user_register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
+            if User.objects.get(username = ):
             user = User.objects.create_user(
                 username=form.cleaned_data['username'],
                 password=form.cleaned_data['password2'],
@@ -25,7 +29,7 @@ def my_user_register(request):
             user.save()
             #注册成功
             name = request.POST["name"]
-            return HttpResponseRedirect("/index")
+            return HttpResponseRedirect("/judgesys/index")
     else:
         form = RegistrationForm()
     return render(request,'account/register.html', {'form': form, })
@@ -38,19 +42,23 @@ def my_login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            login(request,user)
-            #注册成功
-            name = request.POST["name"]
-            response = HttpResponseRedirect(name)
-            return response
-    elif request.user.is_authenticated():
-        return HttpResponseRedirect("/judgesys/index")
+            if not user:
+                messages.error(request,u"用户密码错误")
+                return render(request, "account/login.html", {"form": form})
+            if not user.is_active:
+                messages.error(request, u"用户已被禁用，请联系管理员")
+                return render(request, "account/login.html", {"form":form})
+            login(request, user)
+            if request.GET.get("name"):
+                return HttpResponseRedirect(request.GET.get("name"))
+            return HttpResponseRedirect("/")
     else:
         form = LoginForm()
-    return render(request,'account/login.html',{'form': form }, context_instance=RequestContext(request))
+    return render(request, 'account/login.html', {'form': form})
 
-@login_required
+
 def my_logout(request):
     logout(request)
-    response = HttpResponseRedirect("/judgesys/index")
-    return response
+    if request.GET.get("name"):
+        return HttpResponseRedirect(request.GET.get("name"))
+    return HttpResponseRedirect("/")
