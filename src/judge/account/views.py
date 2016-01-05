@@ -41,12 +41,6 @@ def my_login(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            if not user:
-                messages.error(request,u"用户密码错误")
-                return render(request, "account/login.html", {"form": form})
-            if not user.is_active:
-                messages.error(request, u"用户已被禁用，请联系管理员")
-                return render(request, "account/login.html", {"form":form})
             login(request, user)
             if request.GET.get("next"):
                 return HttpResponseRedirect(request.GET.get("next"))

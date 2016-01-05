@@ -54,24 +54,25 @@ class LoginForm(forms.Form):
     """
     username = forms.CharField(label='用户名')
     password = forms.CharField(label='密码',widget=forms.PasswordInput())
-    remember = forms.BooleanField(label='下次自动登录', required=False)
-"""
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        try:
-            User.objects.get(username = self.cleaned_data['username'])
-        except ObjectDoesNotExist:
-            raise forms.ValidationError('该用户名不存在或密码错误，请重新填写！')
-        return username
 
-    def clean_password(self):
-        if 'username' in self.cleaned_data:
-            username = self.cleaned_data['username']
-            password=self.cleaned_data['password']
+    def __init__(self, request=None, *args, **kwargs):
+        """
+        The 'request' parameter is set for custom auth use by subclasses.
+        The form data comes in via the standard 'data' kwarg.
+        """
+        self.request = request
+        self.user_cache = None
+        super(LoginForm, self).__init__(*args, **kwargs)
 
-            u = User.objects.get(username = username)
-            user = authenticate (username=u.username,password=password)
-            if user is not None and user.is_active:
-                return password
-            raise forms.ValidationError('该用户不存在或密码错误，请重新填写！')
-"""
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            self.user_cache = authenticate(username=username,
+                                           password=password)
+            if self.user_cache is None:
+                raise forms.ValidationError(u"用户不存在或密码错误")
+            elif not self.user_cache.is_valid :
+                raise forms.ValidationError(u"用户被封禁，请联系管理员")
+        return self.cleaned_data
