@@ -20,19 +20,18 @@ def my_user_register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            if User.objects.get(username = ):
-            user = User.objects.create_user(
+            User.objects.create_user(
                 username=form.cleaned_data['username'],
                 password=form.cleaned_data['password2'],
                 email=form.cleaned_data['email'],
                 )
-            user.save()
             #注册成功
-            name = request.POST["name"]
-            return HttpResponseRedirect("/judgesys/index")
+            if request.GET.get("next"):
+                return HttpResponseRedirect(request.GET.get("next"))
+            return HttpResponseRedirect("/")
     else:
         form = RegistrationForm()
-    return render(request,'account/register.html', {'form': form, })
+    return render(request, 'account/register.html', {'form': form, })
 
 
 def my_login(request):
@@ -49,8 +48,8 @@ def my_login(request):
                 messages.error(request, u"用户已被禁用，请联系管理员")
                 return render(request, "account/login.html", {"form":form})
             login(request, user)
-            if request.GET.get("name"):
-                return HttpResponseRedirect(request.GET.get("name"))
+            if request.GET.get("next"):
+                return HttpResponseRedirect(request.GET.get("next"))
             return HttpResponseRedirect("/")
     else:
         form = LoginForm()
@@ -59,6 +58,6 @@ def my_login(request):
 
 def my_logout(request):
     logout(request)
-    if request.GET.get("name"):
-        return HttpResponseRedirect(request.GET.get("name"))
+    if request.GET.get("next"):
+        return HttpResponseRedirect(request.GET.get("next"))
     return HttpResponseRedirect("/")
