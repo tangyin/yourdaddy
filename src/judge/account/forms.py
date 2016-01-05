@@ -55,24 +55,16 @@ class LoginForm(forms.Form):
     username = forms.CharField(label='用户名')
     password = forms.CharField(label='密码',widget=forms.PasswordInput())
 
-    def __init__(self, request=None, *args, **kwargs):
-        """
-        The 'request' parameter is set for custom auth use by subclasses.
-        The form data comes in via the standard 'data' kwarg.
-        """
-        self.request = request
-        self.user_cache = None
-        super(LoginForm, self).__init__(*args, **kwargs)
 
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
         if username and password:
-            self.user_cache = authenticate(username=username,
+            user_cache = authenticate(username=username,
                                            password=password)
-            if self.user_cache is None:
+            if user_cache is None:
                 raise forms.ValidationError(u"用户不存在或密码错误")
-            elif not self.user_cache.is_valid :
+            elif not user_cache.is_active:
                 raise forms.ValidationError(u"用户被封禁，请联系管理员")
         return self.cleaned_data
