@@ -1,9 +1,7 @@
 {% if form.errors %}
-"发生以下错误，请重新填写"
+<p>发生以下错误，请重新填写</p>
 <ul>
-{% for error in  form.errors %}
-{{error}}
-{%endfor%}
+{{ form.subject.errors }}
 </ul>
 {% endif %}
 

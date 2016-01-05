@@ -3,14 +3,18 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout,authenticate
 from django.http import HttpResponse, HttpResponseRedirect
+
 from django.contrib.auth import views
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
 
 
 from forms import RegistrationForm,LoginForm
@@ -20,12 +24,13 @@ def my_user_register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            User.objects.create_user(
+            user = User.objects.create_user(
                 username=form.cleaned_data['username'],
                 password=form.cleaned_data['password2'],
                 email=form.cleaned_data['email'],
                 )
             #注册成功
+            login(request,user)
             if request.GET.get("next"):
                 return HttpResponseRedirect(request.GET.get("next"))
             return HttpResponseRedirect("/")
@@ -34,6 +39,8 @@ def my_user_register(request):
     return render(request, 'account/register.html', {'form': form, })
 
 
+@csrf_protect
+@never_cache
 def my_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
