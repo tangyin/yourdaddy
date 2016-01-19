@@ -21,6 +21,7 @@ def judge(request):
     if request.method == "POST":
         form = CarJudgeForm(request.POST)
         if form.is_valid():
+            pass
 
 
     elif request.method == "GET":
