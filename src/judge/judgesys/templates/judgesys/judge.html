@@ -1,0 +1,14 @@
+{% if form.errors %}
+<p>发生以下错误，请重新填写</p>
+<ul>
+{{ form.subject.errors }}
+</ul>
+{% endif %}
+
+
+<form action="." method="post">{% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input type="submit" value="login" />
+</form>
