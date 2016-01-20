@@ -1,3 +1,4 @@
+
 {% if form.errors %}
 <p>发生以下错误，请重新填写</p>
 <ul>
@@ -10,5 +11,12 @@
     <table>
     {{ form.as_table }}
     </table>
-    <input type="submit" value="login" />
+    <input type="submit" value="开始估价" />
 </form>
+
+{% if price %}
+<p>车辆估价为{{price}}</p>
+{% endif %}
+
+
+

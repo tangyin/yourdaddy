@@ -17,15 +17,12 @@ def index(request):
 
 
 def judge(request):
-    JudgeFormSet = modelformset_factory(CarJudge,fields=)
     if request.method == "POST":
         form = CarJudgeForm(request.POST)
         if form.is_valid():
-            pass
-
-
+            car_judge = form.save(commit=False)
+            judge_price = car_judge.judge_price()
+            return render(request, "judgesys/judge.html",{"form": form, "price":judge_price})
     elif request.method == "GET":
         form = CarJudgeForm()
-        render(request, "judgesys/judge.html", {"form": form})
-
-
+        return render(request, "judgesys/judge.html", {"form": form})
