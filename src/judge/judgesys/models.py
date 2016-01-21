@@ -30,7 +30,6 @@ class CarSeries(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True, verbose_name=u"系列")
     brand = models.ForeignKey(CarBrand,verbose_name= u"品牌")
     year_to_market = models.CharField(max_length=100, null=True, blank=True, verbose_name=u"上市年份")
-    trims = models.CharField(max_length=100, null=True, blank=True, verbose_name=u"内饰配置")
     market_price = models.IntegerField(default=10, null=True, blank=True, verbose_name=u"官方推荐价")
 
     transmission = models.CharField(choices=transmission_choice, max_length=30, null=True, blank=True, verbose_name=u'变速器')

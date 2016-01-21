@@ -8,15 +8,29 @@
 
 
 <form action="." method="post">{% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    </table>
+    <ul>
+        {% for i in form%}
+        <li id="{{i.name}}" {% if i.name == "series" %} style = display:none {% endif %}> {{ i.label_tag }} {{i}}</li>
+        {% endfor %}
+    </ul>
     <input type="submit" value="开始估价" />
 </form>
 
 {% if price %}
 <p>车辆估价为{{price}}</p>
 {% endif %}
+
+
+
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+    });
+</script>
+
+
+
 
 
 
